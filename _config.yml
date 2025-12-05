@@ -1,0 +1,5 @@
+# Archivo: _config.yml
+
+# Archivos y directorios a excluir del proceso de compilación de Jekyll
+exclude:
+  - src/
