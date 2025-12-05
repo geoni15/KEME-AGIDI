@@ -1,0 +1,130 @@
+---
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Image } from "astro:assets";
+import Navbar from "../components/Navbar.astro";
+import inicioGreenImg from "../assets/inicio-green.png";
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Inicio</title>
+        <style>
+            html.lenis,
+            html.lenis body {
+                height: auto;
+            }
+
+            .lenis.lenis-smooth {
+                scroll-behavior: auto !important;
+            }
+
+            .lenis.lenis-smooth [data-lenis-prevent] {
+                overscroll-behavior: contain;
+            }
+
+            .lenis.lenis-stopped {
+                overflow: hidden;
+            }
+
+            .lenis.lenis-scrolling iframe {
+                pointer-events: none;
+            }
+        </style>
+    </head>
+    <body>
+        <Navbar />
+        <div
+            class="container-fluid"
+            id="home"
+            style={{ backgroundColor: "#4eae33", height: "calc(100vh - 56px)" }}
+        >
+            <div class="row h-100">
+                <div
+                    class="col-lg-6 m-0 p-0"
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Image
+                        src={inicioGreenImg}
+                        style={{
+                            width: "400px",
+                            height: "400px",
+                            objectFit: "contain",
+                        }}
+                        alt="Imagen inicio"
+                    />
+                </div>
+                <div class="col-lg-6" style={{ backgroundColor: "white" }}>
+                    <div
+                        class="p-5"
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            height: "100%",
+                        }}
+                    >
+                        <br />
+                        <h1 style={{ textAlign: "center" }}>lorem ipsum</h1>
+                        <br /><br />
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Non nulla eos exercitationem? Labore soluta
+                            dignissimos eum aliquid voluptatem. Iste impedit et
+                            officiis fugiat voluptatem praesentium quibusdam
+                            pariatur dicta expedita illo? Corporis cumque
+                            repudiandae perspiciatis hic neque recusandae
+                            suscipit, libero autem ipsam fuga ullam quas
+                            laudantium velit. Officiis assumenda rem obcaecati
+                            voluptatum, laboriosam, adipisci delectus temporibus
+                            provident, asperiores repellat magni neque? A, qui.
+                            Magnam quaerat tempore sint quae at voluptate
+                            impedit consectetur, exercitationem rerum nesciunt
+                            nobis. Obcaecati unde, rerum qui suscipit voluptate
+                            temporibus fugiat ducimus quibusdam possimus iure
+                            dicta! Quas, dolorum? Harum voluptatem, culpa maxime
+                            fugit eaque illo unde voluptate reprehenderit
+                            temporibus perspiciatis aperiam, officiis veritatis
+                            iusto ut alias. Esse eveniet libero consequuntur
+                            natus ad aperiam aliquid necessitatibus, aut
+                            voluptate voluptas!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div id="about"></div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div id="services"></div>
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div id="contact"></div>
+
+        <script>
+            import Lenis from "lenis";
+
+            const lenis = new Lenis();
+
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+
+            requestAnimationFrame(raf);
+
+            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+                anchor.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    lenis.scrollTo(this.getAttribute("href"));
+                });
+            });
+        </script>
+    </body>
+</html>
