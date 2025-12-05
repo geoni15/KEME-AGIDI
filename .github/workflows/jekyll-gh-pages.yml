@@ -1,0 +1,45 @@
+# Nombre del Workflow (Ahora hace Astro, no Jekyll)
+name: Deploy Astro Project to Pages
+
+on:
+  push:
+    # Asegúrate de que esta es la rama de despliegue
+    branches: ["main"] 
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'npm' # Usa el caché de dependencias
+          
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Astro
+        # Aquí se ejecuta tu comando de Astro con la configuración 'base'
+        run: npm run build 
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        # Sube la carpeta de salida (por defecto 'dist' en Astro)
+        uses: actions/upload-pages-artifact@v3 
+        with:
+          path: ./dist 
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
