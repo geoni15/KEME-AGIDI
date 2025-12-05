@@ -1,0 +1,267 @@
+---
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Image } from "astro:assets";
+import icono from "../assets/icono.svg";
+import iconComplementation from "../assets/icon-complementation.png";
+---
+
+<style>
+  @keyframes mostrar {
+    from {
+      scale: 0;
+    }
+    to {
+      scale: 1;
+    }
+  }
+  @keyframes ocultar {
+    from {
+      scale: 1;
+    }
+    to {
+      scale: 0;
+    }
+  }
+
+  .navbar {
+    height: auto;
+    padding: 0.5rem 0;
+  }
+
+  .nav-link {
+    color: black;
+  }
+
+  .navbar-brand {
+    margin-right: 1rem;
+  }
+  /* Ensure image intrinsic sizes don't force unexpected height */
+
+  .navbar-complement {
+    display: none;
+  }
+  .navbar-complement {
+    display: none;
+  }
+  /* Hide complement when navbar has scrolled class */
+  .navbar.scrolled .navbar-complement {
+    animation: mostrar 0.25s forwards;
+    display: inline-block !important;
+  }
+  .navbar.scrolledUp .navbar-complement {
+    animation: ocultar 0.25s forwards;
+    display: inline-block !important;
+  }
+  .navbar-nav {
+    position: relative;
+    z-index: 1;
+  }
+  .nav-item {
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    width: 8rem;
+    z-index: 2;
+    position: relative;
+  }
+  .nav-active-bg {
+    position: absolute;
+    background-color: #4eae33;
+    border-radius: 20px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .nav-link {
+    color: black;
+    transition: color 0.3s ease;
+    position: relative;
+    z-index: 3;
+  }
+  .nav-link.active,
+  .nav-link:hover {
+    color: white;
+  }
+  .navbar-nav:has(.nav-item:hover) .nav-link.active {
+    color: black;
+  }
+
+  .navbar-nav:has(.nav-item:hover) .nav-item:hover .nav-link.active {
+    color: white;
+  }
+  
+  .center {
+    text-align: center;
+  }
+</style>
+
+<nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-white fixed-top">
+  <div class="container">
+    <div
+      class="navbar-brand-wrap"
+      style="display:flex; align-items:center; gap:0.5rem;"
+    >
+      <Image
+        src={icono}
+        alt="Logo"
+        class="navbar-brand"
+        width={50}
+        height={75}
+        style={{ margin: "0 auto" }}
+      />
+      <span class="navbar-complement">
+        <Image
+          src={iconComplementation}
+          alt="Complemento"
+          class="navbar-complement-img"
+          width={75}
+          height={75}
+          max-width={75}
+          max-height={75}
+          style={{ marginTop: "4px" }}
+        />
+      </span>
+    </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <div class="nav-active-bg"></div>
+        <li class="nav-item">
+          <a class="nav-link center" aria-current="page" href="#home"> Home </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link center" href="#about"> About </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link center" href="#services"> Services </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link center" href="#contact"> Contact </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+ 
+</nav>
+
+<script>
+  import "bootstrap/dist/js/bootstrap.bundle.min.js";
+</script>
+
+<script>
+  const navbar = document.getElementById("navbar");
+  const homeElement = document.getElementById("home");
+  const scrollThreshold = homeElement
+    ? homeElement.offsetTop + homeElement.offsetHeight
+    : 200;
+
+  function handleScroll() {
+    if (!navbar) return;
+    if (window.scrollY >= scrollThreshold) {
+      navbar.classList.add("scrolled");
+      navbar.classList.remove("scrolledUp");
+    } else {
+      navbar.classList.remove("scrolled");
+      navbar.classList.add("scrolledUp");
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll);
+
+  // Active Link Animation & ScrollSpy
+  const navLinks = document.querySelectorAll<HTMLElement>(".nav-link");
+  const navActiveBg = document.querySelector<HTMLElement>(".nav-active-bg");
+  const navbarNav = document.querySelector<HTMLElement>(".navbar-nav");
+  const sectionIds = ["home", "about", "services", "contact"];
+
+  function moveIndicator(element: HTMLElement) {
+    if (!element || !navActiveBg || !navbarNav) return;
+
+    // If element is hidden (e.g. mobile menu closed), hide indicator
+    if (element.offsetParent === null) {
+      navActiveBg.style.opacity = "0";
+      return;
+    }
+
+    const rect = element.getBoundingClientRect();
+    const navRect = navbarNav.getBoundingClientRect();
+
+    // Calculate relative position
+    const top = rect.top - navRect.top;
+    const left = rect.left - navRect.left;
+
+    navActiveBg.style.width = `${rect.width}px`;
+    navActiveBg.style.height = `${rect.height}px`;
+    navActiveBg.style.transform = `translate(${left}px, ${top}px)`;
+    navActiveBg.style.opacity = "1";
+  }
+
+  // Initial position
+  const initialActive = document.querySelector<HTMLElement>(".nav-link.active");
+  if (initialActive) moveIndicator(initialActive);
+
+  // Hover effects
+  navLinks.forEach((link) => {
+    link.addEventListener("mouseenter", () => moveIndicator(link));
+  });
+
+  if (navbarNav) {
+    navbarNav.addEventListener("mouseleave", () => {
+      const activeLink =
+        document.querySelector<HTMLElement>(".nav-link.active");
+      if (activeLink) moveIndicator(activeLink);
+      else if (navActiveBg) navActiveBg.style.opacity = "0";
+    });
+  }
+
+  // ScrollSpy
+  const observerOptions = {
+    root: null,
+    rootMargin: "-50% 0px -50% 0px", // Trigger when element crosses center
+    threshold: 0,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute("id");
+        // Remove active from all
+        navLinks.forEach((link) => link.classList.remove("active"));
+        // Add active to current
+        const activeLink = document.querySelector<HTMLElement>(
+          `.nav-link[href="#${id}"]`,
+        );
+        if (activeLink) {
+          activeLink.classList.add("active");
+          if (navbarNav && !navbarNav.matches(":hover")) {
+            moveIndicator(activeLink);
+          }
+        }
+      }
+    });
+  }, observerOptions);
+
+  sectionIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // Update indicator on window resize
+  window.addEventListener("resize", () => {
+    const activeLink = document.querySelector<HTMLElement>(".nav-link.active");
+    if (activeLink) moveIndicator(activeLink);
+  });
+</script>
